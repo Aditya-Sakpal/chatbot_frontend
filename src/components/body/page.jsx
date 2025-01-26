@@ -6,7 +6,7 @@ import './index.css';
 const Body = () => {
   return (
     <>
-      <div className='chat-body-container'>
+      <div className='body-container'>
         <div className='chatbot-message-container'>
         <div className='bot-logo'>
             <Infinity size={33} color='grey' />
