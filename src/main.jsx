@@ -1,12 +1,12 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import Header from './components/header/page.jsx'
-import Body from './components/body/page.jsx'
+
+import Chatbot from './components/chatbot/page'
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <Body />
-    <Header />
-  </StrictMode>,
+    <Chatbot />
+  </StrictMode>
 )
 
 
