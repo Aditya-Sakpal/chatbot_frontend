@@ -1,0 +1,40 @@
+* {
+    margin: 0;
+    padding: 0;
+  }
+  
+  .header-container {
+    margin-top: 1%;
+    margin-right: 1%;
+    background-color: rgb(255, 255, 255);
+    width: 27.8%;
+    height: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: rgba(255, 254, 254, 255);
+    border-radius: 30px;
+    position: absolute;
+    right: 0;
+    padding: 0 15px;
+  }
+  
+  .header-container h1 {
+    font-family: sans-serif;
+    font-size: x-large;
+    color: rgba(23, 27, 38, 255);
+  }
+  
+  .close-button {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: rgba(23, 27, 38, 255);
+    cursor: pointer;
+    outline: none;
+  }
+  
+  .close-button:hover {
+    color: red;
+  }
+  
