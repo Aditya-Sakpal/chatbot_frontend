@@ -9,14 +9,14 @@ const Header = () => {
     <>
       <div className="header-container">
         <div className='close-button-div' >
-          <ChevronLeft className='close-icon' size={25} />
+          <ChevronLeft className='close-icon'/>
         </div>
         <div className="header-title">
           <p className='bot-name' >Dr. MediMind AI <span className='gpt-cloud'>GPT-4</span> </p>
           <p className='bot-intro' >Your goto health care AI</p>
         </div>
         <div className='search-button-div' >
-          <Search className='search-icon' size={25} />
+          <Search className='search-icon'/>
         </div>
       </div>
     </>
