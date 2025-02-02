@@ -1,15 +1,15 @@
-import React from 'react';
+import PropTypes from 'prop-types';
 
 import { ChevronLeft, Search } from 'lucide-react';
 
 import './index.css';
 
-const Header = () => {
+const Header = ({toggleChatbot}) => {
   return (
     <>
       <div className="header-container">
         <div className='close-button-div' >
-          <ChevronLeft className='close-icon'/>
+          <ChevronLeft className='close-icon' onClick={toggleChatbot} />
         </div>
         <div className="header-title">
           <p className='bot-name' >Dr. MediMind AI <span className='gpt-cloud'>GPT-4</span> </p>
@@ -21,6 +21,9 @@ const Header = () => {
       </div>
     </>
   );
+};
+Header.propTypes = {
+  toggleChatbot: PropTypes.func.isRequired,
 };
 
 export default Header;
