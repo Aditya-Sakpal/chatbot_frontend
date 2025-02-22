@@ -1,0 +1,140 @@
+/* Sidebar.css */
+.sidebar-container{
+  width: 10%;
+  height: 100vh;
+  display: flex;
+  justify-content: start;
+  transition: width 0.3s;
+  align-items: start;
+  overflow: hidden;
+}
+
+.sidebar-container.expanded {
+  width: 25%;
+}
+
+.sidebar {
+  width: 80%;
+  height: 100%;
+  background-color: #333;
+  color: #fff;
+  transition: width 0.3s;
+  overflow: hidden;
+  padding-top: 2%;
+  /* display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center; */
+}
+
+.sidebar-closing-button{
+  width: 20%;
+  height: 5%;
+  display: flex;
+  justify-content: start;
+  align-items: start;
+  cursor: pointer;
+}
+
+.sidebar.expanded {
+  width: 100%;
+}
+
+.toggle-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  padding: 10px;
+  width: 100%;
+  text-align: right;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu-item {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+
+.menu-item.menu-item-expanded{
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  padding-left: 25%;
+}
+
+.menu-item-text{
+  margin-left: 7%;
+}
+
+.user-profile {
+  margin-top: 210%;
+  padding: 5%;
+  /* padding-left: 25%; */
+  border-top: 1px solid white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.user-profile.collapsed {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 490% ;
+}
+
+.user-profile span{
+  font: 1.5em ;
+  margin-left: 7%;
+}
+
+.expanded .user-profile {
+  justify-content: flex-start;
+  padding-left: 20px;
+}
+
+@media (max-width: 1200px) {
+  .sidebar {
+    width: 10%;
+  }
+
+  .sidebar.expanded {
+    width: 20%;
+  }
+}
+
+@media (max-width: 500px) {
+  .sidebar {
+    width: 15%;
+  }
+
+  .sidebar.expanded {
+    width: 40%;
+  }
+}
+
+@media (max-width: 350px) {
+  .sidebar {
+    width: 20%;
+  }
+
+  .sidebar.expanded {
+    width: 60%;
+  }
+}

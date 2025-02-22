@@ -1,0 +1,19 @@
+.admin-panel-container{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+}
+.cards-container{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 1200px) {
+    
+}

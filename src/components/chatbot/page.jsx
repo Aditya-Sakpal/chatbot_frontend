@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import './index.css';
-import Header from '../header/page';
-import Body from '../body/page';
-import Footer from '../footer/page';
+import Header from './components/header/page';
+import Body from './components/body/page';
+import Footer from './components/footer/page';
 import { Infinity as InfinityIcon } from 'lucide-react';
 
 const Page = () => {
