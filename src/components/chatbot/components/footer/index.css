@@ -59,3 +59,7 @@
 .send-icon:hover {
     transform: scale(1.2); /* Increases the size by 20% when hovered */
 }
+
+.chat-submit{
+    display: none;
+}

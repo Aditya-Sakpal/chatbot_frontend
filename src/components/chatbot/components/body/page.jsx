@@ -1,33 +1,39 @@
 import { User, Infinity as InfinityIcon } from 'lucide-react';
 import './index.css';
+import PropTypes from 'prop-types';
 
-
-const Body = () => {
+const Body = ({ messages }) => {
   return (
-    <>
-      <div className='body-container'>
-        <div className='chatbot-message-container'>
-          <div className='bot-logo'>
-            <InfinityIcon size={33} color='grey' />
-          </div>
-          <p className='bot-message' >hello, how can i help you?</p>
+    <div className="body-container">
+      {messages.map((msg, index) => (
+        <div
+          key={index}
+          className={msg.role === "user" ? "client-message-container" : "chatbot-message-container"}
+        >
+          {msg.role === "assistant" && (
+            <div className="bot-logo">
+              <InfinityIcon size={33} color="grey" />
+            </div>
+          )}
+          <p className={msg.role === "user" ? "client-message" : "bot-message"}>{msg.content}</p>
+          {msg.role === "user" && (
+            <div className="client-logo">
+              <User size={27} color="white" />
+            </div>
+          )}
         </div>
-        <div className='client-message-container'>
-          <p className='client-message' >My HCG level is 8.5 is it normal?</p>
-          <div className='client-logo'>
-            <User size={27} color='white' />
-          </div>
-        </div>
-        <div className='chatbot-message-container'>
-          <div className='bot-logo'>
-            <InfinityIcon size={33} color='grey' />
-          </div>
-          <p className='bot-message' >
-          In IVF, HCG (human chorionic gonadotropin) levels are used to determine pregnancy viability after embryo transfer. An HCG level of 8.5 mIU/mL is quite low</p>
-        </div>
-      </div>
-    </>
+      ))}
+    </div>
   );
+};
+
+Body.propTypes = {
+  messages: PropTypes.arrayOf(
+    PropTypes.shape({
+      role: PropTypes.string.isRequired,
+      content: PropTypes.string.isRequired,
+    })
+  ).isRequired,
 };
 
 export default Body;
