@@ -18,6 +18,7 @@ const Page = () => {
     const session_id = "s_123"; 
   
     const sendMessage = async (query) => {
+      setMessages((prev) => [...prev,  { role: "user", content: query }]);
       const lastThreeMessages = messages.slice(-3);
       const requestData = {
         query,
@@ -38,7 +39,7 @@ const Page = () => {
         const responseData = await response.json();
         const botMessage = { role: "assistant", content: responseData.message };
   
-        setMessages((prev) => [...prev, { role: "user", content: query }, botMessage]);
+        setMessages((prev) => [...prev,  botMessage]);
       } catch (error) {
         console.error("Error sending message:", error);
       }
