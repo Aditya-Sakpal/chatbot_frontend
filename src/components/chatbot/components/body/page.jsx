@@ -1,16 +1,17 @@
 import { User, Infinity as InfinityIcon } from 'lucide-react';
 import './index.css';
 import PropTypes from 'prop-types';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import TypingAnimation from './typingAnimation';
 
-const Body = ({ messages, searchQuery, onSearchResult, onNavigateSearch }) => {
-  const welcomeMessage = {
-    role: "assistant",
-    content: "Hello! I'm Dr. MediMind AI, your virtual health assistant. How can I help you today?"
-  };
-
-  const allMessages = [welcomeMessage, ...messages];
+const Body = ({ messages, searchQuery, onSearchResult }) => {
+  const allMessages = useMemo(() => {
+    const welcomeMessage = {
+      role: "assistant",
+      content: "Hello! I'm Dr. MediMind AI, your virtual health assistant. How can I help you today?"
+    };
+    return [welcomeMessage, ...messages];
+  }, [messages]);
   const [isThinking, setIsThinking] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
   const [currentSearchIndex, setCurrentSearchIndex] = useState(-1);
@@ -46,7 +47,7 @@ const Body = ({ messages, searchQuery, onSearchResult, onNavigateSearch }) => {
       setSearchResults([]);
       setCurrentSearchIndex(-1);
     }
-  }, [searchQuery, allMessages]);
+  }, [searchQuery, allMessages, onSearchResult]);
 
   // Navigate search results
   useEffect(() => {
@@ -61,13 +62,6 @@ const Body = ({ messages, searchQuery, onSearchResult, onNavigateSearch }) => {
     }
   }, [currentSearchIndex, searchResults]);
 
-  const handleNavigateSearch = (direction) => {
-    if (direction === 'up' && currentSearchIndex > 0) {
-      setCurrentSearchIndex(currentSearchIndex - 1);
-    } else if (direction === 'down' && currentSearchIndex < searchResults.length - 1) {
-      setCurrentSearchIndex(currentSearchIndex + 1);
-    }
-  };
 
   return (
     <div className="body-container" ref={bodyContainerRef}>
@@ -132,7 +126,6 @@ Body.propTypes = {
   ).isRequired,
   searchQuery: PropTypes.string,
   onSearchResult: PropTypes.func.isRequired,
-  onNavigateSearch: PropTypes.func.isRequired,
 };
 
 export default Body;
