@@ -37,6 +37,7 @@ const Page = () => {
         });
   
         const responseData = await response.json();
+       
         const botMessage = { role: "assistant", content: responseData.message };
   
         setMessages((prev) => [...prev,  botMessage]);
