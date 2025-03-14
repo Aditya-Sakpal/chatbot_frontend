@@ -1,9 +1,12 @@
 import { useState } from 'react';
+
+import { Infinity as InfinityIcon } from 'lucide-react';
+import { useUser } from '@clerk/clerk-react';
+
 import './index.css';
 import Header from './components/header/page';
 import Body from './components/body/page';
 import Footer from './components/footer/page';
-import { Infinity as InfinityIcon } from 'lucide-react';
 
 const Page = () => {
     const [isChatbotVisible, setIsChatbotVisible] = useState(false);
@@ -12,10 +15,11 @@ const Page = () => {
         setIsChatbotVisible(!isChatbotVisible);
     };
 
+    const { user } = useUser();
+
     const [messages, setMessages] = useState([]); 
 
-    const user_id = "user_123"; 
-    const session_id = "s_123"; 
+    const user_id = user?.id; 
   
     const sendMessage = async (query) => {
       setMessages((prev) => [...prev,  { role: "user", content: query }]);
@@ -23,12 +27,11 @@ const Page = () => {
       const requestData = {
         query,
         user_id,
-        session_id,
         messages: lastThreeMessages, 
       };
   
       try {
-        const response = await fetch("http://localhost:8000/api/v1/query", {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/query`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -37,7 +40,7 @@ const Page = () => {
         });
   
         const responseData = await response.json();
-        console.log(responseData);
+
         const botMessage = { 
           role: "assistant", 
           content: responseData.message,
