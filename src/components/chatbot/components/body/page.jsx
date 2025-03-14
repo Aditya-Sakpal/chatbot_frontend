@@ -1,16 +1,18 @@
 import { User, Infinity as InfinityIcon } from 'lucide-react';
 import './index.css';
 import PropTypes from 'prop-types';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import TypingAnimation from './typingAnimation';
+import Graphs from './graphs';
 
-const Body = ({ messages, searchQuery, onSearchResult, onNavigateSearch }) => {
-  const welcomeMessage = {
-    role: "assistant",
-    content: "Hello! I'm Dr. MediMind AI, your virtual health assistant. How can I help you today?"
-  };
-
-  const allMessages = [welcomeMessage, ...messages];
+const Body = ({ messages, searchQuery, onSearchResult }) => {
+  const allMessages = useMemo(() => {
+    const welcomeMessage = {
+      role: "assistant",
+      content: "Hello! I'm Dr. MediMind AI, your virtual health assistant. How can I help you today?"
+    };
+    return [welcomeMessage, ...messages];
+  }, [messages]);
   const [isThinking, setIsThinking] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
   const [currentSearchIndex, setCurrentSearchIndex] = useState(-1);
@@ -46,7 +48,7 @@ const Body = ({ messages, searchQuery, onSearchResult, onNavigateSearch }) => {
       setSearchResults([]);
       setCurrentSearchIndex(-1);
     }
-  }, [searchQuery, allMessages]);
+  }, [searchQuery, allMessages, onSearchResult]);
 
   // Navigate search results
   useEffect(() => {
@@ -61,13 +63,6 @@ const Body = ({ messages, searchQuery, onSearchResult, onNavigateSearch }) => {
     }
   }, [currentSearchIndex, searchResults]);
 
-  const handleNavigateSearch = (direction) => {
-    if (direction === 'up' && currentSearchIndex > 0) {
-      setCurrentSearchIndex(currentSearchIndex - 1);
-    } else if (direction === 'down' && currentSearchIndex < searchResults.length - 1) {
-      setCurrentSearchIndex(currentSearchIndex + 1);
-    }
-  };
 
   return (
     <div className="body-container" ref={bodyContainerRef}>
@@ -85,7 +80,15 @@ const Body = ({ messages, searchQuery, onSearchResult, onNavigateSearch }) => {
             )}
             <p className={msg.role === "user" ? "client-message" : "bot-message"}>
               {msg.role === "assistant" ? (
-                <TypingAnimation message={msg.content} speed={20} />
+                <>
+                  <TypingAnimation message={msg.content} speed={20} />
+                  {msg.is_graph && msg.graph_data && (
+                    <Graphs 
+                      barChartData={msg.graph_data.bar_chart}
+                      pieChartData={msg.graph_data.pie_chart}
+                    />
+                  )}
+                </>
               ) : (
                 searchQuery
                   ? msg.content.split(new RegExp(`(${searchQuery})`, 'gi')).map((part, i) =>
@@ -128,11 +131,21 @@ Body.propTypes = {
     PropTypes.shape({
       role: PropTypes.string.isRequired,
       content: PropTypes.string.isRequired,
+      is_graph: PropTypes.bool,
+      graph_data: PropTypes.shape({
+        bar_chart: PropTypes.shape({
+          labels: PropTypes.arrayOf(PropTypes.string),
+          values: PropTypes.arrayOf(PropTypes.number)
+        }),
+        pie_chart: PropTypes.shape({
+          categories: PropTypes.arrayOf(PropTypes.string),
+          values: PropTypes.arrayOf(PropTypes.number)
+        })
+      })
     })
   ).isRequired,
   searchQuery: PropTypes.string,
   onSearchResult: PropTypes.func.isRequired,
-  onNavigateSearch: PropTypes.func.isRequired,
 };
 
 export default Body;
