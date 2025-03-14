@@ -37,7 +37,16 @@ const Page = () => {
         });
   
         const responseData = await response.json();
-        const botMessage = { role: "assistant", content: responseData.message };
+        console.log(responseData);
+        const botMessage = { 
+          role: "assistant", 
+          content: responseData.message,
+          is_graph: responseData.is_graph || false,
+          graph_data: responseData.is_graph ? {
+            bar_chart: responseData.message.bar_chart,
+            pie_chart: responseData.message.pie_chart
+          } : null
+        };
   
         setMessages((prev) => [...prev,  botMessage]);
       } catch (error) {

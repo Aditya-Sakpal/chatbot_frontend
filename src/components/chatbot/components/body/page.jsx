@@ -3,6 +3,7 @@ import './index.css';
 import PropTypes from 'prop-types';
 import { useEffect, useRef, useState, useMemo } from 'react';
 import TypingAnimation from './typingAnimation';
+import Graphs from './graphs';
 
 const Body = ({ messages, searchQuery, onSearchResult }) => {
   const allMessages = useMemo(() => {
@@ -79,7 +80,15 @@ const Body = ({ messages, searchQuery, onSearchResult }) => {
             )}
             <p className={msg.role === "user" ? "client-message" : "bot-message"}>
               {msg.role === "assistant" ? (
-                <TypingAnimation message={msg.content} speed={20} />
+                <>
+                  <TypingAnimation message={msg.content} speed={20} />
+                  {msg.is_graph && msg.graph_data && (
+                    <Graphs 
+                      barChartData={msg.graph_data.bar_chart}
+                      pieChartData={msg.graph_data.pie_chart}
+                    />
+                  )}
+                </>
               ) : (
                 searchQuery
                   ? msg.content.split(new RegExp(`(${searchQuery})`, 'gi')).map((part, i) =>
@@ -122,6 +131,17 @@ Body.propTypes = {
     PropTypes.shape({
       role: PropTypes.string.isRequired,
       content: PropTypes.string.isRequired,
+      is_graph: PropTypes.bool,
+      graph_data: PropTypes.shape({
+        bar_chart: PropTypes.shape({
+          labels: PropTypes.arrayOf(PropTypes.string),
+          values: PropTypes.arrayOf(PropTypes.number)
+        }),
+        pie_chart: PropTypes.shape({
+          categories: PropTypes.arrayOf(PropTypes.string),
+          values: PropTypes.arrayOf(PropTypes.number)
+        })
+      })
     })
   ).isRequired,
   searchQuery: PropTypes.string,
