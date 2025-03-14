@@ -4,13 +4,13 @@ import { BarChart, Bar, PieChart, Pie, XAxis, YAxis, CartesianGrid, Tooltip, Leg
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
 const Graphs = ({ barChartData, pieChartData }) => {
-  // Transform bar chart data
+  
   const transformedBarData = barChartData.labels.map((label, index) => ({
     name: label,
     value: barChartData.values[index]
   }));
 
-  // Transform pie chart data
+
   const transformedPieData = pieChartData.categories.map((category, index) => ({
     name: category,
     value: pieChartData.values[index]
@@ -19,7 +19,7 @@ const Graphs = ({ barChartData, pieChartData }) => {
   return (
     <div className="graphs-container">
       <div className="bar-chart-container">
-        <ResponsiveContainer width="100%" height={200}>
+        <ResponsiveContainer width="100%" height={250}>
           <BarChart data={transformedBarData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" />
@@ -31,8 +31,8 @@ const Graphs = ({ barChartData, pieChartData }) => {
         </ResponsiveContainer>
       </div>
       <div className="pie-chart-container">
-        <ResponsiveContainer width="100%" height={200}>
-          <PieChart>
+        <ResponsiveContainer width="100%" height={355}>
+          <PieChart margin={{ top: 20, right: 20, bottom: 80, left: 20 }}>
             <Pie
               data={transformedPieData}
               cx="50%"
@@ -47,7 +47,11 @@ const Graphs = ({ barChartData, pieChartData }) => {
               ))}
             </Pie>
             <Tooltip />
-            <Legend />
+            <Legend
+              layout="horizontal" 
+              align="center"     
+              verticalAlign="bottom" 
+            />
           </PieChart>
         </ResponsiveContainer>
       </div>
@@ -55,4 +59,4 @@ const Graphs = ({ barChartData, pieChartData }) => {
   );
 };
 
-export default Graphs; 
+export default Graphs;
