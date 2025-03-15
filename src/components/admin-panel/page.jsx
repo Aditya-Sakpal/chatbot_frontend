@@ -70,6 +70,8 @@ const page = () => {
             } 
             localStorage.setItem("isJustSignedUp", isJustSignedUp)
         }
+
+        localStorage.setItem("user_id", user?.id)
     }, [user]);
     
     const cards = [

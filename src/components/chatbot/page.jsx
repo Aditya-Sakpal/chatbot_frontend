@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
 import { Infinity as InfinityIcon } from 'lucide-react';
-import { useUser } from '@clerk/clerk-react';
 
 import './index.css';
 import Header from './components/header/page';
@@ -15,11 +14,10 @@ const Page = () => {
         setIsChatbotVisible(!isChatbotVisible);
     };
 
-    const { user } = useUser();
 
     const [messages, setMessages] = useState([]); 
 
-    const user_id = user?.id; 
+    const user_id = localStorage.getItem("user_id")
   
     const sendMessage = async (query) => {
       setMessages((prev) => [...prev,  { role: "user", content: query }]);
