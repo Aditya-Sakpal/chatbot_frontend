@@ -1,54 +1,76 @@
-import { useState } from 'react';
+import './index.css'
+import { Upload, History, MessageSquare, LogOut, User } from 'lucide-react'
+import { useNavigate, useLocation } from 'react-router-dom'
+import { useEffect } from 'react'
 
-import { Home, User, Settings } from 'lucide-react';
-import { PanelRight } from 'lucide-react';
-import { UserButton } from '@clerk/clerk-react';
+const Page = ({ onPageChange, selectedPage }) => {
+  const navigate = useNavigate()
+  const location = useLocation()
 
-import './index.css';
-
-const Sidebar = () => {
-  const [isExpanded, setIsExpanded] = useState(false);
-
-  const toggleSidebar = () => {
-    setIsExpanded(!isExpanded);
-  };
-
-  const sideBarItems = [
+  const menuItems = [
     {
-      icon: <Home />,
-      text: 'Home',
+      title: 'Test Chatbot',
+      icon: <MessageSquare className='icon' />,
+      path: 'test-chatbot'
     },
     {
-      icon: <User />,
-      text: 'Profile',
+      title: 'Data Upload',
+      icon: <Upload className='icon' />,
+      path: 'data-upload'
     },
     {
-      icon: <Settings />,
-      text: 'Settings',
-    },
+      title: 'Query History',
+      icon: <History className='icon' />,
+      path: 'query-history'
+    }
   ]
 
+
+
+
+  const handleLogout = () => {
+    localStorage.clear()
+    navigate('/login')
+  }
+
   return (
-    <div className={`sidebar-container ${isExpanded ? 'expanded' : 'collapsed'}`}>
-      <div className={`sidebar ${isExpanded ? 'expanded' : 'collapsed'}`}>
-        <ul className="menu">
-          {sideBarItems.map((item, index) => (
-            <li key={index} className={`menu-item ${isExpanded ? 'menu-item-expanded' : 'menu-item-collapsed'}`}>
+    <div className='sidebar-container'>
+      <div className='sidebar-content'>
+        <div className='sidebar-top'>
+          <h2 className='sidebar-title'>Admin Panel</h2>
+        </div>
+        
+        <div className='sidebar-options'>
+          {menuItems.map((item, index) => (
+            <div
+              key={index}
+              className={`sidebar-option ${location.pathname === item.path ? 'active' : ''}`}
+              onClick={() => onPageChange(item.path)}
+            >
               {item.icon}
-              {isExpanded && <span className='menu-item-text' >{item.text}</span>}
-            </li>
+              <p>{item.title}</p>
+            </div>
           ))}
-        </ul>
-        <div className={`user-profile ${isExpanded ? 'expanded' : 'collapsed'}`}>
-          <UserButton />
-          {isExpanded && <span>LogOut</span>}
+        </div>
+
+        <div className='sidebar-profile'>
+          <div className='profile-info'>
+            <div className='profile-avatar'>
+              <User className='profile-icon' />
+            </div>
+            <div className='profile-details'>
+              <p className='profile-name'>{localStorage.getItem('user_name') || 'Admin User'}</p>
+              <p className='profile-email'>{localStorage.getItem('user_email') || 'admin@example.com'}</p>
+            </div>
+          </div>
+          <div className='logout-button' onClick={handleLogout}>
+            <LogOut className='icon' />
+            <p>Logout</p>
+          </div>
         </div>
       </div>
-      <div className='sidebar-closing-button' >
-        <PanelRight onClick={toggleSidebar} />
-      </div>
     </div>
-  );
-};
+  )
+}
 
-export default Sidebar;
+export default Page

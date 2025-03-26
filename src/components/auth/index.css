@@ -4,4 +4,63 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    min-height: 100vh;
+    background-color: #f5f5f5;
+}
+
+.loader-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.loader {
+    width: 48px;
+    height: 48px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.message-container {
+    padding: 20px 40px;
+    border-radius: 8px;
+    text-align: center;
+    animation: fadeIn 0.5s ease-in;
+}
+
+.message-container.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.message-container.welcome {
+    background-color: #cce5ff;
+    color: #004085;
+    border: 1px solid #b8daff;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.loader-container p {
+    color: #666;
+    font-size: 16px;
+    margin: 0;
+}
+
+.message-container p {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 500;
 }
