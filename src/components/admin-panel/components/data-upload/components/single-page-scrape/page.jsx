@@ -98,7 +98,7 @@ const page = () => {
             </div>
           </div>
           <div className="single-page-scrape-right">
-            <p>Previously uploaded urls</p>
+            Previously uploaded urls
             <div className="previously-uploaded-urls-container">
               {previousUrls.map((url , index) => (
                 <p key={index}>{url}</p>

@@ -193,7 +193,7 @@ const page = () => {
         </div>
       </div>
       <div className="web-crawl-right">
-        <p>Previously crawled websites</p>
+        Previously crawled websites
         <div className="previously-crawled-urls-container">
           {previousUrls.map((url, index) => (
             <p key={index}>{url}</p>

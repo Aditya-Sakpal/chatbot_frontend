@@ -162,7 +162,7 @@ const Page = () => {
         </div>
       </div>
       <div className="document-upload-right">
-        <p>Previously uploaded documents</p>
+        Previously uploaded documents
         <div className="previously-uploaded-documents-container">
           {previousDocuments.map((doc, index) => (
             <p key={index} className="document-item">
