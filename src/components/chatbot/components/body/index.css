@@ -25,10 +25,16 @@ chat-app {
   display: none;
 }
 
+.message-container{
+  padding:0px !important;
+  text-align: left !important;
+}
+
 .client-message-container {
   margin-top: 12px;
   margin-left: auto;
   margin-right: 8px;
+  text-align: right !important;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -65,15 +71,15 @@ chat-app {
 .chatbot-message-container {
   display: flex;
   width: fit-content;
-  max-width: 80%;
   margin-top: 12px;
+  text-align: left !important;
   margin-left: 8px;
   padding: 8px 12px; 
   background-color: #ffffff; 
   box-shadow: 5px 5px 2px rgba(0, 0, 0, 0.1); 
   border-radius: 12px 12px 12px 0; 
   color: #333;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
   animation: slideInFromLeft 0.5s ease-out;
 }
@@ -193,7 +199,7 @@ chat-app {
 
 .bar-chart-container,
 .pie-chart-container {
-  width: 100%;
+  width: 100% !important;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   padding: 10px;
