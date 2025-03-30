@@ -19,6 +19,24 @@ const Page = () => {
   const [pieChartData, setPieChartData] = useState(null);
   const [barChartData, setBarChartData] = useState(null);
   const [isSliding, setIsSliding] = useState(false);
+  const [successMessages, setSuccessMessages] = useState({
+    save: '',
+    download: '',
+    email: ''
+  });
+
+  const countUniqueQueryIds = (data) => {
+    const uniqueQueryIds = new Set();
+  
+    data.forEach(innerArray => {
+      if (innerArray.length > 6) {
+        uniqueQueryIds.add(innerArray[6]); // Assuming query_id is at index 6
+      }
+    });
+  
+    return uniqueQueryIds.size;
+  };
+  
 
   const fetchQueryHistory = async () => {
     try {
@@ -32,6 +50,7 @@ const Page = () => {
         })
       })
       const data = await response.json()
+      const uniqueQueryCount = countUniqueQueryIds(data.message)
       console.log(data)
       setQueryHistory(data.message)
     } catch (error) {
@@ -91,7 +110,17 @@ const Page = () => {
     )
   }
 
+  // Helper function to show success message temporarily
+  const showSuccessMessage = (type, message) => {
+    setSuccessMessages(prev => ({ ...prev, [type]: message }));
+    setTimeout(() => {
+      setSuccessMessages(prev => ({ ...prev, [type]: '' }));
+    }, 3000); // Message disappears after 3 seconds
+  };
+
   const handleSave = async () => {
+    if (selectedArticles.length === 0) return;
+    
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/save_articles`, {
         headers: {
@@ -102,13 +131,13 @@ const Page = () => {
           user_id: localStorage.getItem("user_id"),
           article_ids: selectedArticles
         })
-      })
-      const data = await response.json()
-      console.log(data)
+      });
+      const data = await response.json();
+      showSuccessMessage('save', 'Saved successfully');
     } catch (error) {
-      console.error("Error saving articles:", error)
+      console.error("Error saving articles:", error);
     }
-  }
+  };
 
   const fetchDescriptiveAnalysis = async () => {
     try {
@@ -203,181 +232,157 @@ const Page = () => {
   };
 
   const handleDownload = async () => {
-    if (showDescriptiveAnalysis) {
-      const pdf = await createAnalysisPDF();
-      pdf.save('descriptive-analysis.pdf');
-    } else {
-      try {
-        // 1. Get articles data from API
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/get_articles_abstract`, {
-          headers: {
-            "Content-Type": "application/json"
-          },
-          method: "POST",
-          body: JSON.stringify({
-            article_ids: selectedArticles
-          })
-        });
-        const articlesData = await response.json();
+    if (selectedArticles.length === 0) return;
 
-        // 2. Capture bubble chart as image
-        const chartElement = document.querySelector('.bubble-chart-container');
-        const canvas = await html2canvas(chartElement);
-        const chartImage = canvas.toDataURL('image/png');
+    try {
+      // 1. Get articles data from API
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/get_articles_abstract`, {
+        headers: {
+          "Content-Type": "application/json"
+        },
+        method: "POST",
+        body: JSON.stringify({
+          article_ids: selectedArticles
+        })
+      });
+      const articlesData = await response.json();
 
-        // 3. Create PDF
-        const pdf = new jsPDF();
+      // 2. Capture bubble chart as image
+      const chartElement = document.querySelector('.bubble-chart-container');
+      const canvas = await html2canvas(chartElement);
+      const chartImage = canvas.toDataURL('image/png');
 
-        // Add title to first page
-        pdf.setFontSize(16);
-        pdf.text('Bubble Chart Analysis', 20, 20);
+      // 3. Create PDF
+      const pdf = new jsPDF();
 
-        // Add bubble chart to first page
-        pdf.addImage(chartImage, 'PNG', 20, 30, 170, 100);
+      // Add title to first page
+      pdf.setFontSize(16);
+      pdf.text('Bubble Chart Analysis', 20, 20);
 
-        // Add articles data to subsequent pages
-        articlesData.data.forEach((article, index) => {
-          // Add new page for each article
-          if (index > 0) {
-            pdf.addPage();
-          } else {
-            pdf.addPage(); // Add page after bubble chart
-          }
+      // Add bubble chart to first page
+      pdf.addImage(chartImage, 'PNG', 20, 30, 170, 100);
 
-          // Article title
-          pdf.setFontSize(14);
-          pdf.setFont(undefined, 'bold');
-          pdf.text('Article Title:', 20, 20);
+      // Add articles data to subsequent pages
+      articlesData.data.forEach((article, index) => {
+        // Add new page for each article
+        if (index > 0) {
+          pdf.addPage();
+        } else {
+          pdf.addPage(); // Add page after bubble chart
+        }
 
-          // Handle long titles with text wrapping
-          const titleLines = pdf.splitTextToSize(article.article_title, 170);
-          pdf.setFont(undefined, 'normal');
-          pdf.text(titleLines, 20, 30);
+        // Article title
+        pdf.setFontSize(14);
+        pdf.setFont(undefined, 'bold');
+        pdf.text('Article Title:', 20, 20);
 
-          // Article abstract
-          pdf.setFontSize(12);
-          pdf.setFont(undefined, 'bold');
-          pdf.text('Abstract:', 20, 50 + (titleLines.length - 1) * 10);
+        // Handle long titles with text wrapping
+        const titleLines = pdf.splitTextToSize(article.article_title, 170);
+        pdf.setFont(undefined, 'normal');
+        pdf.text(titleLines, 20, 30);
 
-          // Handle long abstract with text wrapping
-          pdf.setFont(undefined, 'normal');
-          const abstractLines = pdf.splitTextToSize(article.abstract, 170);
-          pdf.text(abstractLines, 20, 60 + (titleLines.length - 1) * 10);
-        });
+        // Article abstract
+        pdf.setFontSize(12);
+        pdf.setFont(undefined, 'bold');
+        pdf.text('Abstract:', 20, 50 + (titleLines.length - 1) * 10);
 
-        // Download PDF
-        pdf.save('bubble-chart-analysis.pdf');
+        // Handle long abstract with text wrapping
+        pdf.setFont(undefined, 'normal');
+        const abstractLines = pdf.splitTextToSize(article.abstract, 170);
+        pdf.text(abstractLines, 20, 60 + (titleLines.length - 1) * 10);
+      });
 
-      } catch (error) {
-        console.error("Error downloading articles:", error);
-      }
+      // Download PDF
+      pdf.save('bubble-chart-analysis.pdf');
+      showSuccessMessage('download', 'Download completed');
+
+    } catch (error) {
+      console.error("Error downloading articles:", error);
     }
   };
 
   const handleEmail = async () => {
-    if (showDescriptiveAnalysis) {
-      try {
-        const pdf = await createAnalysisPDF();
-        const pdfBlob = pdf.output('blob');
-        const formData = new FormData();
-        formData.append('pdf_file', pdfBlob, 'descriptive-analysis.pdf');
-        formData.append('user_id', localStorage.getItem("user_id"));
-        formData.append('query', selectedQuery[9]);
+    if (selectedArticles.length === 0) return;
 
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/send_email`, {
-          method: 'POST',
-          body: formData,
-        });
+    try {
+      // 1. Get articles data from API
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/get_articles_abstract`, {
+        headers: {
+          "Content-Type": "application/json"
+        },
+        method: "POST",
+        body: JSON.stringify({
+          article_ids: selectedArticles
+        })
+      });
+      const articlesData = await response.json();
 
-        const result = await response.json();
-        if (result.success) {
-          alert('Email sent successfully!');
-        }
-      } catch (error) {
-        console.error('Error sending email:', error);
-        alert('Failed to send email');
-      }
-    } else {
-      try {
-        // 1. Get articles data from API
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/get_articles_abstract`, {
-          headers: {
-            "Content-Type": "application/json"
-          },
-          method: "POST",
-          body: JSON.stringify({
-            article_ids: selectedArticles
-          })
-        });
-        const articlesData = await response.json();
+      // 2. Capture bubble chart as image
+      const chartElement = document.querySelector('.bubble-chart-container');
+      const canvas = await html2canvas(chartElement);
+      const chartImage = canvas.toDataURL('image/png');
 
-        // 2. Capture bubble chart as image
-        const chartElement = document.querySelector('.bubble-chart-container');
-        const canvas = await html2canvas(chartElement);
-        const chartImage = canvas.toDataURL('image/png');
+      // 3. Create PDF
+      const pdf = new jsPDF();
 
-        // 3. Create PDF
-        const pdf = new jsPDF();
+      // Add title to first page
+      pdf.setFontSize(16);
+      pdf.text('Bubble Chart Analysis', 20, 20);
 
-        // Add title to first page
-        pdf.setFontSize(16);
-        pdf.text('Bubble Chart Analysis', 20, 20);
+      // Add bubble chart to first page
+      pdf.addImage(chartImage, 'PNG', 20, 30, 170, 100);
 
-        // Add bubble chart to first page
-        pdf.addImage(chartImage, 'PNG', 20, 30, 170, 100);
-
-        // Add articles data to subsequent pages
-        articlesData.data.forEach((article, index) => {
-          if (index > 0 || index === 0) {
-            pdf.addPage();
-          }
-
-          // Article title
-          pdf.setFontSize(14);
-          pdf.setFont(undefined, 'bold');
-          pdf.text('Article Title:', 20, 20);
-
-          const titleLines = pdf.splitTextToSize(article.article_title, 170);
-          pdf.setFont(undefined, 'normal');
-          pdf.text(titleLines, 20, 30);
-
-          // Article abstract
-          pdf.setFontSize(12);
-          pdf.setFont(undefined, 'bold');
-          pdf.text('Abstract:', 20, 50 + (titleLines.length - 1) * 10);
-
-          pdf.setFont(undefined, 'normal');
-          const abstractLines = pdf.splitTextToSize(article.abstract, 170);
-          pdf.text(abstractLines, 20, 60 + (titleLines.length - 1) * 10);
-        });
-
-        // Convert PDF to Blob
-        const pdfBlob = pdf.output('blob');
-
-        // Create FormData and append the file
-        const formData = new FormData();
-        formData.append('pdf_file', pdfBlob, 'bubble-chart-analysis.pdf');
-        formData.append('user_id', localStorage.getItem("user_id"));
-        formData.append('query', selectedQuery[9]);
-
-        // 4. Send PDF to backend
-        const emailResponse = await fetch(`${import.meta.env.VITE_API_URL}/send_email`, {
-          method: 'POST',
-          body: formData, // No need to set Content-Type header, browser will set it automatically with boundary
-        });
-
-        const emailResult = await emailResponse.json();
-
-        if (emailResult.success) {
-          alert('Email sent successfully!');
-        } else {
-          throw new Error(emailResult.message || 'Failed to send email');
+      // Add articles data to subsequent pages
+      articlesData.data.forEach((article, index) => {
+        if (index > 0 || index === 0) {
+          pdf.addPage();
         }
 
-      } catch (error) {
-        console.error("Error sending email:", error);
-        alert('Failed to send email. Please try again.');
+        // Article title
+        pdf.setFontSize(14);
+        pdf.setFont(undefined, 'bold');
+        pdf.text('Article Title:', 20, 20);
+
+        const titleLines = pdf.splitTextToSize(article.article_title, 170);
+        pdf.setFont(undefined, 'normal');
+        pdf.text(titleLines, 20, 30);
+
+        // Article abstract
+        pdf.setFontSize(12);
+        pdf.setFont(undefined, 'bold');
+        pdf.text('Abstract:', 20, 50 + (titleLines.length - 1) * 10);
+
+        pdf.setFont(undefined, 'normal');
+        const abstractLines = pdf.splitTextToSize(article.abstract, 170);
+        pdf.text(abstractLines, 20, 60 + (titleLines.length - 1) * 10);
+      });
+
+      // Convert PDF to Blob
+      const pdfBlob = pdf.output('blob');
+
+      // Create FormData and append the file
+      const formData = new FormData();
+      formData.append('pdf_file', pdfBlob, 'bubble-chart-analysis.pdf');
+      formData.append('user_id', localStorage.getItem("user_id"));
+      formData.append('query', selectedQuery[9]);
+
+      // 4. Send PDF to backend
+      const emailResponse = await fetch(`${import.meta.env.VITE_API_URL}/send_email`, {
+        method: 'POST',
+        body: formData, // No need to set Content-Type header, browser will set it automatically with boundary
+      });
+
+      const emailResult = await emailResponse.json();
+
+      if (emailResult.success) {
+        showSuccessMessage('email', 'Email sent successfully');
+      } else {
+        throw new Error(emailResult.message || 'Failed to send email');
       }
+
+    } catch (error) {
+      console.error("Error sending email:", error);
+      alert('Failed to send email. Please try again.');
     }
   };
 
@@ -399,17 +404,26 @@ const Page = () => {
                 <h1>{showDescriptiveAnalysis ? 'Descriptive Analysis' : 'Bubble Chart Analysis'}</h1>
               </div>
               <div className="options-container">
-                <div className="option-container" onClick={handleSave}>
-                  <Save className='icon' />
-                  <p>Save</p>
+                <div className={`option-container ${selectedArticles.length === 0 ? 'disabled' : ''}`}>
+                  {successMessages.save && <span className="success-message">{successMessages.save}</span>}
+                  <div className="option-inner" onClick={handleSave}>
+                    <Save className='icon' />
+                    <p>Save</p>
+                  </div>
                 </div>
-                <div className="option-container" onClick={handleDownload}>
-                  <FileDown className='icon' />
-                  <p>Download</p>
+                <div className={`option-container ${selectedArticles.length === 0 ? 'disabled' : ''}`}>
+                  {successMessages.download && <span className="success-message">{successMessages.download}</span>}
+                  <div className="option-inner" onClick={handleDownload}>
+                    <FileDown className='icon' />
+                    <p>Download</p>
+                  </div>
                 </div>
-                <div className="option-container" onClick={handleEmail}>
-                  <Mail className='icon' />
-                  <p>Email</p>
+                <div className={`option-container ${selectedArticles.length === 0 ? 'disabled' : ''}`}>
+                  {successMessages.email && <span className="success-message">{successMessages.email}</span>}
+                  <div className="option-inner" onClick={handleEmail}>
+                    <Mail className='icon' />
+                    <p>Email</p>
+                  </div>
                 </div>
               </div>
             </div>
