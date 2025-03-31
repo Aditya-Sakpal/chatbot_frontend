@@ -8,7 +8,12 @@
     align-items: center;
     background: #f8f9fa;
     animation: fadeIn 0.5s ease-out;
-    overflow: hidden;
+    overflow-y: auto; 
+    &::-webkit-scrollbar {
+        display: none;
+    }
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
 @keyframes fadeIn {
@@ -23,7 +28,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(to right, #8e70ab, #a78bc9);
+    background: linear-gradient(to right, #008080, #20B2AA);
     color: white;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     animation: slideDown 0.6s ease-out;
@@ -44,27 +49,13 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     background: white;
     animation: fadeInExpand 0.8s ease-out 0.3s both;
-    scrollbar-width: thin;
-    scrollbar-color: #8884d8 #f0f0f0;
 }
-
+.table-container::-webkit-scrollbar{
+    display: none;
+}
 @keyframes fadeInExpand {
     from { opacity: 0; transform: scale(0.98); }
     to { opacity: 1; transform: scale(1); }
-}
-
-.table-container::-webkit-scrollbar {
-    width: 6px;
-}
-
-.table-container::-webkit-scrollbar-track {
-    background: #f0f0f0;
-    border-radius: 10px;
-}
-
-.table-container::-webkit-scrollbar-thumb {
-    background-color: #8884d8;
-    border-radius: 10px;
 }
 
 .query-history-container table {
@@ -77,7 +68,7 @@
 .query-history-container table thead {
     position: sticky;
     top: 0;
-    background: linear-gradient(135deg, #8e70ab 0%, #6a66c4 100%);
+    background: linear-gradient(135deg, #008080 0%, #20B2AA 100%);
     color: white;
     z-index: 2;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -86,8 +77,18 @@
 .query-history-container table tbody{
     overflow-y: scroll;
 }
+.query-history-container table thead tr:hover {
+    background-color: transparent ;
+    transform: none ;
+    cursor: default ;
+}
 
-.query-history-container table th {
+.query-history-container table thead tr:hover td::before,
+.query-history-container table thead tr:hover td::after {
+    content: none !important;
+}
+
+.query-history-container table th  {
     padding: 16px 12px;
     text-align: left;
     font-weight: 500;
@@ -121,14 +122,12 @@
 }
 
 .query-history-container table tr:hover {
-    background-color: #f9f5ff;
+    background-color: #e6f7f7;
     transform: translateY(-1px);
     cursor: pointer;
-    box-shadow: 0 4px 8px rgba(142, 112, 171, 0.1);
+    box-shadow: 0 4px 8px rgba(32, 178, 170, 0.1);
 }
 
-
-/* Changed from vertical to horizontal line */
 .query-history-container table tr:hover td::before {
     content: '';
     position: absolute;
@@ -136,7 +135,7 @@
     left: 0;
     width: 100%;
     height: 2px;
-    background: #8e70ab;
+    background: #20B2AA;
     animation: lineExpand 0.3s ease-out;
 }
 
@@ -145,51 +144,17 @@
     to { transform: scaleX(1); opacity: 1; }
 }
 
-/* Remove the vertical line on hover */
 .query-history-container table tr:hover td::after {
-    content: none;
-}
-
-/* Add this to create both top and bottom lines on hover */
-.query-history-container table tr:hover td {
-    position: relative;
-}
-
-/* Top horizontal line */
-.query-history-container table tr:hover td::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 2px;
-    background: #8e70ab;
+    background: #20B2AA;
     animation: lineExpand 0.3s ease-out;
 }
 
-/* Bottom horizontal line */
-.query-history-container table tr:hover td::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background: #8e70ab;
-    animation: lineExpand 0.3s ease-out;
-}
-
-@keyframes lineExpand {
-    from { transform: scaleX(0); opacity: 0; }
-    to { transform: scaleX(1); opacity: 1; }
-}
-
-/* Keep your existing hover effects */
-.query-history-container table tr:hover {
-    background-color: #f9f5ff;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(142, 112, 171, 0.1);
-}
 /* Popup Container */
 .popup-container {
     position: fixed;
@@ -233,7 +198,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: linear-gradient(to right, #8e70ab, #a78bc9);
+    background: linear-gradient(to right, #008080, #20B2AA);
     color: white;
     padding: 0 20px;
 }
@@ -311,7 +276,7 @@
     width: 100%;
     height: 85%;
     display: flex;
-    position: relative; /* For absolute positioning of buttons */
+    position: relative;
 }
 
 .popup-content-left,
@@ -323,7 +288,6 @@
 }
 .popup-content-right::-webkit-scrollbar{
     display: none;
-    
 }
 
 /* Article Details */
@@ -348,9 +312,9 @@
 }
 
 .article-details-container-inner-div:hover {
-    background: #f5f0ff;
+    background: #e6f7f7;
     transform: translateX(3px);
-    box-shadow: 0 3px 8px rgba(142, 112, 171, 0.1);
+    box-shadow: 0 3px 8px rgba(32, 178, 170, 0.1);
 }
 
 /* Chart Containers */
@@ -376,13 +340,13 @@
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* Buttons (Position Maintained) */
+/* Buttons */
 .move-button {
     position: absolute;
     bottom: 20px;
     left: 20px;
     padding: 10px 20px;
-    background: #8884d8;
+    background: #20B2AA;
     color: white;
     border: none;
     border-radius: 6px;
@@ -432,7 +396,7 @@
     width: 18px;
     height: 18px;
     cursor: pointer;
-    accent-color: #8e70ab;
+    accent-color: #20B2AA;
 }
 
 /* Responsive Adjustments */
