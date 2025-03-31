@@ -74,7 +74,7 @@ const Page = () => {
             tonality,
             language: selectedLanguage,
             use_knowledge_base: useKnowledgeBase,
-            tokens
+            tokens : tokens
           }
         })
       });
