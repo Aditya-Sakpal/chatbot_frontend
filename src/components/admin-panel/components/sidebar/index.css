@@ -729,3 +729,206 @@ input:checked + .slider:before {
     transform: translateY(5px);
     animation: contentAppear 0.4s ease-out 0.3s forwards;
 }
+/* ==================== */
+/* === ADMIN PANEL CONTENT - MOBILE VIEW === */
+/* ==================== */
+@media (max-width: 768px) {
+    /* Main container adjustments */
+    .admin-panel-container {
+      flex-direction: column;
+      height: auto;
+      min-height: 100vh;
+    }
+  
+    /* Content area styling */
+    .admin-panel-content {
+      width: 100%;
+      margin-left: 0;
+      padding: 15px;
+      height: auto;
+      min-height: calc(100vh - 60px); /* Account for header */
+      overflow-x: hidden;
+    }
+  
+    /* Cards container adjustments */
+    .cards-container {
+      flex-direction: column;
+      height: auto;
+      padding: 10px;
+      gap: 15px;
+    }
+  
+    /* Profile modal adjustments */
+    .profile-modal-content {
+      flex-direction: column;
+      width: 95%;
+      height: 90%;
+      max-height: none;
+    }
+  
+    .profile-modal-left,
+    .profile-modal-right {
+      width: 100%;
+    }
+  
+    .profile-modal-left {
+      padding: 1.5rem;
+      border-right: none;
+      border-bottom: 1px solid #eee;
+    }
+  
+    .profile-modal-right {
+      padding: 1.5rem;
+      overflow-y: auto;
+    }
+  
+    /* Sidebar specific adjustments */
+    .sidebar-container {
+      width: 280px;
+      transform: translateX(-100%);
+      z-index: 1000;
+    }
+  
+    .sidebar-container.expanded {
+      transform: translateX(0);
+    }
+  
+    /* Form elements */
+    input, select, textarea, button {
+      font-size: 16px !important; /* Prevent zooming on focus */
+    }
+  
+    /* Tables */
+    table {
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+  
+    /* Publication items */
+    .publication-item {
+      padding: 1rem;
+    }
+  
+    /* Stats items */
+    .stat-item {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+      padding: 0.8rem;
+    }
+  
+    /* Toggle switch */
+    .switch {
+      width: 50px;
+      height: 28px;
+    }
+  
+    .slider:before {
+      height: 20px;
+      width: 20px;
+    }
+  
+    input:checked + .slider:before {
+      transform: translateX(22px);
+    }
+  
+    /* Header adjustments */
+    .sidebar-title {
+      font-size: 18px;
+    }
+  
+    /* Button sizes */
+    .logout-button, .sidebar-option {
+      padding: 10px 12px;
+    }
+  
+    /* Profile section */
+    .profile-info {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    /* Animation adjustments */
+    @keyframes sidebarExpand {
+      0% { width: 0; opacity: 0; }
+      100% { width: 280px; opacity: 1; }
+    }
+  
+    /* Prevent body scroll when modal/sidebar is open */
+    body.sidebar-open,
+    body.modal-open {
+      overflow: hidden;
+      position: fixed;
+      width: 100%;
+    }
+  }
+  
+  /* ==================== */
+  /* === SMALL MOBILE DEVICES === */
+  /* ==================== */
+  @media (max-width: 480px) {
+    .admin-panel-content {
+      padding: 10px;
+    }
+  
+    .cards-container {
+      gap: 10px;
+    }
+  
+    .profile-modal-content {
+      width: 98%;
+      height: 95%;
+    }
+  
+    .profile-modal-left,
+    .profile-modal-right {
+      padding: 1rem;
+    }
+  
+    .sidebar-container {
+      width: 260px;
+    }
+  
+    .publication-item {
+      padding: 0.8rem;
+    }
+  
+    .stat-item {
+      padding: 0.6rem;
+    }
+  
+    .sidebar-title {
+      font-size: 16px;
+    }
+  
+    .sidebar-option p {
+      font-size: 13px;
+    }
+  
+    .profile-name {
+      font-size: 13px;
+    }
+  
+    .profile-email {
+      font-size: 11px;
+    }
+  }
+  
+  /* ==================== */
+  /* === LANDSCAPE ORIENTATION === */
+  /* ==================== */
+  @media (max-width: 768px) and (orientation: landscape) {
+    .admin-panel-content {
+      min-height: calc(100vh - 40px);
+    }
+  
+    .profile-modal-content {
+      height: 85%;
+    }
+  
+    .cards-container {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+  }
