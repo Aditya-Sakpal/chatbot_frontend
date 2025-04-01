@@ -223,6 +223,11 @@
     padding: 10px;
 }
 
+.previously-uploaded-documents-container p {
+    width: 95%;
+    height: 60px;
+}
+
 .previously-uploaded-documents-container::-webkit-scrollbar {
     display: none;
 }
